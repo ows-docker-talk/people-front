@@ -5,11 +5,16 @@ import './App.css';
 function App() {
   const [ people, setPeople ] = useState([]);
   useEffect(() => {
-    const axiosInstance = axios.create({ baseURL: 'http://localhost:3000' });
+    const axiosInstanceConfig = axios.create({ baseURL: 'http://localhost:3000' });
 
-    axiosInstance.get('/people')
+    axiosInstanceConfig.get('/config.json')
     .then((response) => {
-      console.log('NNN data: ', response.data);
+      const config = response.data;
+      const axiosInstanceData = axios.create({ baseURL: config.backendHost });
+
+      return axiosInstanceData.get('/people');
+    })
+    .then((response) => {
       setPeople(response.data);
     })
     .catch((error) => {
@@ -20,8 +25,8 @@ function App() {
 
   function renderTable(people) {
     return people
-      .map((person) => (
-        <tr>
+      .map((person, index) => (
+        <tr key={index}>
           <td>{person.firstName}</td>
           <td>{person.lastName}</td>
           <td>{person.email}</td>
