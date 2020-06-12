@@ -1,24 +1,48 @@
-import React from 'react';
-import logo from './logo.svg';
+import React,  { useState, useEffect } from 'react';
+import axios from 'axios';
 import './App.css';
 
 function App() {
+  const [ people, setPeople ] = useState([]);
+  useEffect(() => {
+    const axiosInstance = axios.create({ baseURL: 'http://localhost:3000' });
+
+    axiosInstance.get('/people')
+    .then((response) => {
+      console.log('NNN data: ', response.data);
+      setPeople(response.data);
+    })
+    .catch((error) => {
+      console.error(error);
+      throw new Error('Fail to obtain the people data');
+    });
+  }, [])
+
+  function renderTable(people) {
+    return people
+      .map((person) => (
+        <tr>
+          <td>{person.firstName}</td>
+          <td>{person.lastName}</td>
+          <td>{person.email}</td>
+        </tr>
+      ))
+  }
+  
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <table>
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Email</th>
+          </tr>
+        </thead>
+        <tbody>
+          {renderTable(people)}
+        </tbody>
+      </table>
     </div>
   );
 }
