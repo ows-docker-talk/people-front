@@ -1,4 +1,4 @@
 #!/bin/bash
 
 [[ -z "${ENVIRONMENT}" ]] && environ='local' || environ="${ENVIRONMENT}"
-cp "./public/config.${environ}.json" "./public/config.json"
+cp "./src/config/environ.${environ}.js" "./src/config/environ.js"

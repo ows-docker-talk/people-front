@@ -1,19 +1,14 @@
 import React,  { useState, useEffect } from 'react';
 import axios from 'axios';
 import './App.css';
+import config from './config/environ';
 
 function App() {
   const [ people, setPeople ] = useState([]);
   useEffect(() => {
-    const axiosInstanceConfig = axios.create({ baseURL: 'http://localhost:3000' });
+    const axiosInstanceConfig = axios.create({ baseURL: config.baseURL });
 
-    axiosInstanceConfig.get('/config.json')
-    .then((response) => {
-      const config = response.data;
-      const axiosInstanceData = axios.create({ baseURL: config.backendHost });
-
-      return axiosInstanceData.get('/people');
-    })
+    axiosInstanceConfig.get('/people')
     .then((response) => {
       setPeople(response.data);
     })
